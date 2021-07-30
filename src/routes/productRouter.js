@@ -1,6 +1,6 @@
 const routes = require("express").Router();
 const controller = require("../controllers/productController");
 
-routes.get("/register", controller.register);
+routes.post("/register", controller.register);
 
 module.exports = routes;
