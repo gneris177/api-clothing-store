@@ -1,16 +1,16 @@
-const express = require('express');
+const express = require("express");
 const app = express();
-
-const PORT = 7000 || process.env.PORT;
-
-app.use(express.json())
-
+const cors = require("cors");
 const db = require("./database/config");
 
+require("dotenv").config();
+app.use(cors());
 
-const registerRoute = require('./routes/productRouter');
+const PORT = process.env.PORT || 8877;
 
+//routes
+const produtoRouter = require("./routes/productRouter");
+app.use(produtoRouter);
 
-app.use(registerRoute);
-
-app.listen(PORT, () => console.log("On http://localhost:7000"));
+app.use(express.json());
+app.listen(8000, () => console.log("Server ON"));

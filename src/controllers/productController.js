@@ -1,34 +1,40 @@
+const uploadCloudnary = require("../services/uploadCloudnary");
 const Product = require("../models/productModel");
 
-exports.register = async (req, res) => {
+exports.add = async (req, res) => {
   try {
+    const { name, description, price, category } = req.body;
+
     const product = await Product.create({
-      name: "name",
-      desc: "desc",
-      price: 3,
+      name: name,
+      description: description,
+      price: price,
+      category: category,
     });
-    res.status(200).json(product);
 
-    const fs = require("fs");
-    const cloudinary = require("../config/cloudinaryConfig");
+    //upload img in cloud
+    const cloudImg = await uploadCloudnary(req.file);
 
-    module.exports = async (file) => {
-      if (file) {
-        try {
-          const response = await cloudinary.uploader.upload(file.path);
-          //delete upload
-          const resultHandler = (err) => {
-            if (err) console.log("unlink failed", err);
-          };
-          fs.unlink(file.path, resultHandler);
+    //add url img
+    Product.findByIdAndUpdate(
+      product.id,
+      { imgUrl: cloudImg.url },
+      { upsert: true, setDefaultsOnInsert: true, useFindAndModify: false }
+    );
 
-          return response;
-        } catch (err) {
-          console.log(err);
-        }
-      }
-    };
-  } catch (error) {
-    res.status(400).json({ error });
+    res.status(200).json({ message: "sucess" });
+  } catch (err) {
+    res.status(400).json({ error: err });
+  }
+};
+
+exports.products = async (req, res) => {
+  try {
+    const products = await Product.find().catch((err) =>
+      res.status(400).json({ error: err })
+    );
+    res.status(200).json(products);
+  } catch (err) {
+    res.status(400).json({ error: "erro" });
   }
 };
