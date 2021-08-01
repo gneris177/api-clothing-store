@@ -16,11 +16,7 @@ exports.add = async (req, res) => {
     const cloudImg = await uploadCloudnary(req.file);
 
     //add url img
-    Product.findByIdAndUpdate(
-      product.id,
-      { imgUrl: cloudImg.url },
-      { upsert: true, setDefaultsOnInsert: true, useFindAndModify: false }
-    );
+
 
     res.status(200).json({ message: "sucess" });
   } catch (err) {
