@@ -13,4 +13,4 @@ const produtoRouter = require("./routes/productRouter");
 app.use(produtoRouter);
 
 app.use(express.json());
-app.listen(8000, () => console.log("Server ON"));
+app.listen(PORT, () => console.log("Server ON"));
